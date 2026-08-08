@@ -1,0 +1,17 @@
+enum PracticeMode {
+  learnUppercase,
+  learnLowercase,
+  learnCursiveUppercase,
+  learnCursiveLowercase,
+  learnNumbers,
+  learnWordsSimple,
+  learnWordsCursive,
+  practiceUppercase,
+  practiceLowercase,
+  practiceCursiveUppercase,
+  practiceCursiveLowercase,
+  practiceWords,
+  practiceCustomWords,
+  practiceFreeWriting,
+  dailyChallenge,
+}
