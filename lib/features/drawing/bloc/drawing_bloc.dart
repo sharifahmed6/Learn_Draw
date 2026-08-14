@@ -3,7 +3,6 @@ import 'drawing_event.dart';
 import 'drawing_state.dart';
 import '../domain/entities/practice_mode.dart';
 import '../domain/entities/practice_item.dart';
-import '../../../../core/utils/premium_manager.dart';
 
 class DrawingBloc extends Bloc<DrawingEvent, DrawingState> {
   DrawingBloc(PracticeMode mode, {List<String>? customWords, List<PracticeItem>? customItems, int initialIndex = 0}) 

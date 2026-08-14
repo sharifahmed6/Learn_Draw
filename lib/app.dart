@@ -5,6 +5,8 @@ import 'features/progress/presentation/bloc/progress_bloc.dart';
 import 'features/progress/presentation/bloc/progress_event.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/settings/presentation/bloc/settings_event.dart';
+import 'features/auth/bloc/auth_bloc.dart';
+import 'features/auth/bloc/auth_event.dart';
 import 'injection_container.dart' as di;
 
 class App extends StatelessWidget {
@@ -19,6 +21,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<SettingsBloc>(
           create: (context) => di.sl<SettingsBloc>()..add(LoadSettingsEvent()),
+        ),
+        BlocProvider<AuthBloc>(
+          create: (context) => di.sl<AuthBloc>()..add(AuthCheckStatus()),
         ),
       ],
       child: MaterialApp(

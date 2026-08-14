@@ -1,6 +1,6 @@
 class PremiumManager {
   // Set this to true to unlock all features, false to lock premium features
-  static bool isPremium = false;
+  static bool isPremium = true;
   
   // Stores the name of the active plan (e.g., 'Yearly', 'Monthly')
   static String activePlanName = 'Yearly';

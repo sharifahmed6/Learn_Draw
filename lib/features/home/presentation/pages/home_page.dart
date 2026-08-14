@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../injection_container.dart';
 import '../../bloc/home_bloc.dart';
 import '../../bloc/home_event.dart';
@@ -9,14 +10,20 @@ import 'practice_page.dart';
 import 'dashboard_page.dart';
 import '../../../../features/progress/presentation/pages/progress_page.dart';
 import '../../../../features/subscription/presentation/pages/subscription_page.dart';
+import '../../../../features/profile/presentation/bloc/profile_bloc.dart';
+import '../../../../features/profile/presentation/bloc/profile_event.dart';
+import '../../../../features/profile/presentation/bloc/profile_state.dart';
+import '../../../../features/profile/presentation/pages/profile_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<HomeBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<HomeBloc>()),
+        BlocProvider(create: (_) => sl<ProfileBloc>()..add(LoadProfile())),
+      ],
       child: const _HomePageContent(),
     );
   }
@@ -35,6 +42,25 @@ class _HomePageContent extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            leading: state.tabIndex == 4 ? const SizedBox.shrink() : BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, profileState) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      context.read<HomeBloc>().add(const HomeTabChanged(4)); // Navigate to Profile tab
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.deepPurple.shade100,
+                      backgroundImage: profileState.imageUrl.isNotEmpty ? NetworkImage(profileState.imageUrl) : null,
+                      child: profileState.imageUrl.isEmpty
+                          ? const Icon(Icons.person, color: Colors.deepPurple, size: 20)
+                          : null,
+                    ),
+                  ),
+                );
+              },
+            ),
             title: const Text(
               'Learn & Draw',
               style: TextStyle(
@@ -76,11 +102,12 @@ class _HomePageContent extends StatelessWidget {
             ),
             child: IndexedStack(
               index: state.tabIndex,
-              children: const [
-                DashboardPage(),
-                LearnPage(),
-                PracticePage(),
-                ProgressPage(),
+              children: [
+                const DashboardPage(),
+                const LearnPage(),
+                const PracticePage(),
+                const ProgressPage(),
+                 ProfilePage(),
               ],
             ),
           ),
@@ -134,6 +161,11 @@ class _HomePageContent extends StatelessWidget {
                       icon: Icon(Icons.bar_chart_outlined),
                       activeIcon: Icon(Icons.bar_chart_rounded),
                       label: 'Progress',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person_outline),
+                      activeIcon: Icon(Icons.person),
+                      label: 'Profile',
                     ),
                   ],
                 ),
