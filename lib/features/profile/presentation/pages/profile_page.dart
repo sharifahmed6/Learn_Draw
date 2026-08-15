@@ -71,16 +71,24 @@ class ProfilePage extends StatelessWidget {
   }
   final supabase = Supabase.instance.client;
 
-  Future<void> getProfile()async{
-    final response = await supabase.rpc(
-      'get_profiles_by_country',
-      params:{
-        'country_name': 'Bangla',
-        'city_name':'d'
-      }
+  Future<void> getProfile(context)async{
+    final response = await supabase.functions.invoke(
+      'delete_account',
     );
 
-    print(response);
+    if (response.data['message'] == 'Account deleted successfully') {
+      await supabase.auth.signOut();
+
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const LoginPage(),
+          ),
+              (route) => false,
+        );
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -211,7 +219,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: (){
-                    getProfile();
+                    getProfile(context);
                   },
                   child: Container(
                     width: 150,
